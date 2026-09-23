@@ -4,11 +4,13 @@ namespace AdamMarshall\FilamentFileLibrary\Filament\Resources\Files\Tables;
 
 use AdamMarshall\FilamentFileLibrary\Actions\CreateShareLinkAction;
 use AdamMarshall\FilamentFileLibrary\Actions\ManageShareLinksAction;
+use AdamMarshall\FilamentFileLibrary\Enums\FileType;
 use AdamMarshall\FilamentFileLibrary\Models\LibraryFile;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class LibraryFilesTable
@@ -21,10 +23,6 @@ class LibraryFilesTable
                     ->label('Name')
                     ->searchable()
                     ->weight('medium'),
-                TextColumn::make('mime_type')
-                    ->label('Type')
-                    ->badge()
-                    ->color('gray'),
                 TextColumn::make('size')
                     ->label('Size')
                     ->formatStateUsing(fn (LibraryFile $record) => $record->humanReadableSize()),
@@ -36,7 +34,14 @@ class LibraryFilesTable
                     ->dateTime()
                     ->sortable(),
             ])
+            ->filters([
+                SelectFilter::make('mime_type')
+                    ->label('Type')
+                    ->options(FileType::class)
+                    ->multiple(),
+            ])
             ->defaultSort('created_at', 'desc')
+            ->recordUrl(fn (LibraryFile $record) => $record->previewUrl(), shouldOpenInNewTab: true)
             ->recordActions([
                 Action::make('download')
                     ->label('Download')

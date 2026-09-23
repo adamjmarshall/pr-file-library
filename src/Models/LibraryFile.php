@@ -56,4 +56,30 @@ class LibraryFile extends Model
     {
         return Storage::disk($this->disk)->download($this->path, $this->original_name);
     }
+
+    public function view()
+    {
+        return Storage::disk($this->disk)->response($this->path, $this->original_name);
+    }
+
+    public function isPreviewable(): bool
+    {
+        return in_array($this->mime_type, [
+            'application/pdf',
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/webp',
+            'image/svg+xml',
+        ], true);
+    }
+
+    public function previewUrl(): ?string
+    {
+        if (! $this->isPreviewable()) {
+            return null;
+        }
+
+        return route('filament-file-library.view-file', $this);
+    }
 }

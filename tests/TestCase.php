@@ -16,6 +16,7 @@ use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -30,6 +31,8 @@ class TestCase extends Orchestra
         $this->setUpFilamentPanel();
 
         Storage::fake('local');
+
+        Route::get('/login', fn () => 'login')->name('login');
     }
 
     protected function getPackageProviders($app): array
