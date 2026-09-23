@@ -54,7 +54,9 @@ FilamentFileLibraryPlugin::make()
 
 ## Folders
 
-Files can be nested inside folders, navigated Drive-style: clicking a folder opens it (with its own bookmarkable URL, `/files/{folder}`), and breadcrumbs at the top let you navigate back up. Folder creation and deletion use the same "upload" permission as file uploads — there's no separate folder permission. Deleting a folder deletes its subfolders and every file inside them (including the underlying storage objects), after a confirmation prompt.
+Files can be nested inside folders, listed together with files in a single table (folders first, then files, both alphabetical) — clicking a folder row navigates into it (with its own bookmarkable URL, `/files/{folder}`), while clicking a file previews it. Breadcrumbs at the top let you navigate back up. Folder creation and deletion use the same "upload" permission as file uploads — there's no separate folder permission. Deleting a folder deletes its subfolders and every file inside them (including the underlying storage objects), after a confirmation prompt.
+
+Folder and file rows are backed by a read-only `LibraryEntry` model that unions the two underlying tables (there's no single physical table for "entries") — Filament tables need one Eloquent query to page/sort/search over, and this is what lets folders and files share that single table while still being real, separate models (`Folder`, `LibraryFile`) everywhere else in the plugin.
 
 ## Signed share links
 

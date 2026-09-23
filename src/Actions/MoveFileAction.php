@@ -3,10 +3,11 @@
 namespace AdamMarshall\FilamentFileLibrary\Actions;
 
 use AdamMarshall\FilamentFileLibrary\Models\Folder;
-use AdamMarshall\FilamentFileLibrary\Models\LibraryFile;
+use AdamMarshall\FilamentFileLibrary\Models\LibraryEntry;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Gate;
 
 class MoveFileAction
 {
@@ -15,7 +16,7 @@ class MoveFileAction
         return Action::make('moveToFolder')
             ->label('Move')
             ->icon(Heroicon::OutlinedFolderArrowDown)
-            ->authorize('moveFile')
+            ->visible(fn (LibraryEntry $record) => $record->isFile() && Gate::allows('moveFile', $record->toLibraryFile()))
             ->schema([
                 Select::make('folder_id')
                     ->label('Folder')
@@ -23,9 +24,13 @@ class MoveFileAction
                     ->options(fn () => self::folderOptions())
                     ->searchable(),
             ])
-            ->fillForm(fn (LibraryFile $record) => ['folder_id' => $record->folder_id])
-            ->action(function (array $data, LibraryFile $record) {
-                $record->update(['folder_id' => $data['folder_id'] ?? null]);
+            ->fillForm(fn (LibraryEntry $record) => ['folder_id' => $record->toLibraryFile()->folder_id])
+            ->action(function (array $data, LibraryEntry $record) {
+                $file = $record->toLibraryFile();
+
+                Gate::authorize('moveFile', $file);
+
+                $file->update(['folder_id' => $data['folder_id'] ?? null]);
             });
     }
 

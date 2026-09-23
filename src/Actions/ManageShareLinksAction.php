@@ -2,9 +2,10 @@
 
 namespace AdamMarshall\FilamentFileLibrary\Actions;
 
-use AdamMarshall\FilamentFileLibrary\Models\LibraryFile;
+use AdamMarshall\FilamentFileLibrary\Models\LibraryEntry;
 use Filament\Actions\Action;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Gate;
 
 class ManageShareLinksAction
 {
@@ -14,12 +15,18 @@ class ManageShareLinksAction
             ->label('Links')
             ->icon(Heroicon::OutlinedQueueList)
             ->color('gray')
-            ->authorize('manageShareLinks')
-            ->modalHeading(fn (LibraryFile $record) => "Share links for {$record->original_name}")
-            ->modalContent(fn (LibraryFile $record) => view(
-                'filament-file-library::share-links-modal',
-                ['file' => $record->loadMissing(['shareLinks' => fn ($query) => $query->latest()])]
-            ))
+            ->visible(fn (LibraryEntry $record) => $record->isFile() && Gate::allows('manageShareLinks', $record->toLibraryFile()))
+            ->modalHeading(fn (LibraryEntry $record) => "Share links for {$record->name}")
+            ->modalContent(function (LibraryEntry $record) {
+                $file = $record->toLibraryFile();
+
+                Gate::authorize('manageShareLinks', $file);
+
+                return view(
+                    'filament-file-library::share-links-modal',
+                    ['file' => $file->loadMissing(['shareLinks' => fn ($query) => $query->latest()])]
+                );
+            })
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Close');
     }
