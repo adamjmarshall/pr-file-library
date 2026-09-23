@@ -2,8 +2,8 @@
 
 A simple shared file-hosting area for [Filament](https://filamentphp.com) v5 admin panels:
 
-- Any authenticated panel user can browse and view an index of uploaded files.
-- Users with an "upload" permission can upload new files.
+- Any authenticated panel user can browse and view an index of uploaded files, organized into folders.
+- Users with an "upload" permission can upload new files and create/delete folders to organize them.
 - Users with a "manage share links" permission can create revocable, expirable signed links so people who aren't logged in can download a specific file.
 - Users with a "manage" permission can delete files.
 
@@ -12,7 +12,7 @@ Permission checks go through Laravel's standard `$user->can()` / policy system, 
 ## Installation
 
 ```bash
-composer require adamjmarshal275/filament-file-library
+composer require adamjmarshall/pr-file-library
 php artisan migrate
 ```
 
@@ -51,6 +51,10 @@ FilamentFileLibraryPlugin::make()
     ->manageLinksPermission('files.share')
     ->managePermission('files.manage');
 ```
+
+## Folders
+
+Files can be nested inside folders, navigated Drive-style: clicking a folder opens it (with its own bookmarkable URL, `/files/{folder}`), and breadcrumbs at the top let you navigate back up. Folder creation and deletion use the same "upload" permission as file uploads — there's no separate folder permission. Deleting a folder deletes its subfolders and every file inside them (including the underlying storage objects), after a confirmation prompt.
 
 ## Signed share links
 

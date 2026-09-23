@@ -48,7 +48,7 @@ class LibraryFileResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ManageLibraryFiles::route('/'),
+            'index' => ManageLibraryFiles::route('/{folder?}'),
         ];
     }
 }

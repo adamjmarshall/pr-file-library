@@ -15,6 +15,7 @@ class LibraryFile extends Model
     protected $table = 'file_library_files';
 
     protected $fillable = [
+        'folder_id',
         'disk',
         'path',
         'original_name',
@@ -28,6 +29,18 @@ class LibraryFile extends Model
         return [
             'size' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (self $file) {
+            Storage::disk($file->disk)->delete($file->path);
+        });
+    }
+
+    public function folder(): BelongsTo
+    {
+        return $this->belongsTo(Folder::class, 'folder_id');
     }
 
     public function uploader(): BelongsTo

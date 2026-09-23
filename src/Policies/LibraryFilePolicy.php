@@ -32,6 +32,11 @@ class LibraryFilePolicy
         return $user->can(config('filament-file-library.permissions.manage'));
     }
 
+    public function moveFile(User $user, LibraryFile $file): bool
+    {
+        return $user->can(config('filament-file-library.permissions.upload'));
+    }
+
     public function createShareLink(User $user, LibraryFile $file): bool
     {
         return $user->can(config('filament-file-library.permissions.manage_share_links'));

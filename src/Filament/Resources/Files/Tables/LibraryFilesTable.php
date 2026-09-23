@@ -4,6 +4,7 @@ namespace AdamMarshall\FilamentFileLibrary\Filament\Resources\Files\Tables;
 
 use AdamMarshall\FilamentFileLibrary\Actions\CreateShareLinkAction;
 use AdamMarshall\FilamentFileLibrary\Actions\ManageShareLinksAction;
+use AdamMarshall\FilamentFileLibrary\Actions\MoveFileAction;
 use AdamMarshall\FilamentFileLibrary\Enums\FileType;
 use AdamMarshall\FilamentFileLibrary\Models\LibraryFile;
 use Filament\Actions\Action;
@@ -48,6 +49,7 @@ class LibraryFilesTable
                     ->icon(Heroicon::OutlinedArrowDownTray)
                     ->action(fn (LibraryFile $record) => $record->download())
                     ->authorize('view'),
+                MoveFileAction::make(),
                 CreateShareLinkAction::make(),
                 ManageShareLinksAction::make(),
                 DeleteAction::make()

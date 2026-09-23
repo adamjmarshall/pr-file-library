@@ -3,8 +3,10 @@
 namespace AdamMarshall\FilamentFileLibrary;
 
 use AdamMarshall\FilamentFileLibrary\Models\FileShareLink;
+use AdamMarshall\FilamentFileLibrary\Models\Folder;
 use AdamMarshall\FilamentFileLibrary\Models\LibraryFile;
 use AdamMarshall\FilamentFileLibrary\Policies\FileShareLinkPolicy;
+use AdamMarshall\FilamentFileLibrary\Policies\FolderPolicy;
 use AdamMarshall\FilamentFileLibrary\Policies\LibraryFilePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +26,7 @@ class FilamentFileLibraryServiceProvider extends ServiceProvider
 
         Gate::policy(LibraryFile::class, LibraryFilePolicy::class);
         Gate::policy(FileShareLink::class, FileShareLinkPolicy::class);
+        Gate::policy(Folder::class, FolderPolicy::class);
 
         $this->publishes([
             __DIR__.'/../config/filament-file-library.php' => config_path('filament-file-library.php'),

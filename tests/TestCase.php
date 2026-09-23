@@ -2,7 +2,6 @@
 
 namespace AdamMarshall\FilamentFileLibrary\Tests;
 
-use AdamMarshall\FilamentFileLibrary\FilamentFileLibraryPlugin;
 use AdamMarshall\FilamentFileLibrary\FilamentFileLibraryServiceProvider;
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
@@ -11,7 +10,6 @@ use Filament\Facades\Filament;
 use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
-use Filament\Panel;
 use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
@@ -49,6 +47,7 @@ class TestCase extends Orchestra
             TablesServiceProvider::class,
             FilamentServiceProvider::class,
             FilamentFileLibraryServiceProvider::class,
+            TestPanelProvider::class,
         ];
     }
 
@@ -71,14 +70,8 @@ class TestCase extends Orchestra
 
     protected function setUpFilamentPanel(): void
     {
-        $panel = Panel::make()
-            ->default()
-            ->id('admin')
-            ->path('admin')
-            ->authGuard('web')
-            ->plugin(FilamentFileLibraryPlugin::make());
+        $panel = Filament::getPanel('admin');
 
-        Filament::registerPanel($panel);
         Filament::setCurrentPanel($panel);
         $panel->boot();
     }
