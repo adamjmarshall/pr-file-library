@@ -46,11 +46,14 @@ test('a link that reached its download limit is not usable', function () {
     expect($link->isUsable())->toBeFalse();
 });
 
-test('the public download route serves a usable link and increments its count', function () {
+test('the public download route serves a usable link inline and increments its count', function () {
     $file = makeFile();
     $link = FileShareLink::create(['file_id' => $file->id]);
 
-    $this->get($link->url())->assertOk();
+    $response = $this->get($link->url());
+
+    $response->assertOk();
+    expect($response->headers->get('content-disposition'))->toContain('inline');
 
     expect($link->fresh()->download_count)->toBe(1);
 });

@@ -22,6 +22,6 @@ class PublicDownloadController extends Controller
             $link->incrementQuietly('download_count');
         });
 
-        return $link->file->download();
+        return $link->file->view();
     }
 }
