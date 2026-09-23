@@ -1,5 +1,5 @@
 {
-    "name": "adamjmarshal275/filament-file-library",
+    "name": "adamjmarshall275/pr-file-library",
     "description": "A simple shared file-hosting area for Filament v5: authenticated users browse and view files, permitted users upload files and create revocable signed links for unauthenticated sharing.",
     "type": "library",
     "license": "MIT",
